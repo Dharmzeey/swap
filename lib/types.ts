@@ -15,7 +15,7 @@ export interface IphoneModel {
 export interface StorageVariant {
   id: number;
   capacity: string;
-  base_value_ngn: number;
+  swap_in_value_ngn: number;
 }
 
 export interface DefectType {

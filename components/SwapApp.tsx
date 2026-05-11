@@ -28,10 +28,15 @@ function isToReady(cfg: ConfigState) {
 }
 
 function useHistory() {
-  const [items, setItems] = useState<HistoryEntry[]>(() => {
-    if (typeof window === "undefined") return [];
-    try { return JSON.parse(localStorage.getItem("swap.history") ?? "[]"); } catch { return []; }
-  });
+  const [items, setItems] = useState<HistoryEntry[]>([]);
+
+  // Load persisted history after mount to avoid SSR/client hydration mismatch.
+  useEffect(() => {
+    try {
+      const saved = JSON.parse(localStorage.getItem("swap.history") ?? "[]");
+      if (saved.length) setItems(saved);
+    } catch {}
+  }, []);
   const push = useCallback((entry: HistoryEntry) => {
     setItems((prev) => {
       const next = [entry, ...prev].slice(0, 6);
@@ -67,8 +72,6 @@ export default function SwapApp({ seriesList, defects }: Props) {
   const [loading, setLoading]     = useState(false);
   const { items: history, push: pushHistory, clear: clearHistory } = useHistory();
   const { message: toast, flash } = useToast();
-
-  console.log(seriesList, defects);
 
   // Auto-fetch estimate whenever config is ready
   const lastKey = useRef("");

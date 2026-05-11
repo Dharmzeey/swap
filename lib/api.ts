@@ -8,12 +8,16 @@ import type {
 
 // Server components use the direct Django URL (server-to-server, no CORS).
 // Client components call /api/* which Next.js rewrites to Django via next.config.ts.
-const serverBase =
-  typeof window === "undefined"
-    ? (process.env.DJANGO_URL ?? "http://localhost:8000")
-    : "";
+// const serverBase =
+//   typeof window === "undefined"
+//     ? (process.env.DJANGO_URL ?? "http://localhost:8000")
+//     : "";
+
+const serverBase = "http://localhost:8000";
 
 async function apiFetch<T>(path: string, init?: RequestInit): Promise<T> {
+  const url = `${serverBase}`;
+  console.log("API Fetch:", url, init);
   const res = await fetch(`${serverBase}${path}`, {
     ...init,
     headers: { "Content-Type": "application/json", ...init?.headers },

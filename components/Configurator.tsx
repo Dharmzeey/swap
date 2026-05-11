@@ -35,6 +35,7 @@ export default function Configurator({
   useEffect(() => {
     if (!config.seriesId) { setModels([]); return; }
     console.log("Fetching models for series", config.seriesId);
+    console.log(typeof config.seriesId);
     api.models(config.seriesId).then(setModels).catch(console.error);
   }, [config.seriesId]);
 
